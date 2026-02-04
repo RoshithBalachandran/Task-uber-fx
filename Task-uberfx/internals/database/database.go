@@ -12,25 +12,29 @@ import (
 )
 
 // psql database connection
-func PostgresDB(cfg config.Config) (*gorm.DB, error) {
-	dns := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", cfg.DB_HOST, cfg.DB_USER, cfg.DB_PASS, cfg.DB_NAME, cfg.DB_PORT)
-	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
+func PostgresDB(cfg *config.Config) (*gorm.DB, error) {
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		cfg.DB_HOST, cfg.DB_USER, cfg.DB_PASS, cfg.DB_NAME, cfg.DB_PORT,
+	)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 	db.AutoMigrate(&models.User{})
-	log.Println("Postgress Sqlm connected")
+	log.Println("Postgres SQL connected")
 	return db, nil
 }
 
 // mysql commection
-
 func MysqlConnection(cfg *config.Config) (*gorm.DB, error) {
-	db, err := gorm.Open(mysql.Open(cfg.MYSQL_DSN), &gorm.Config{})
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=True&loc=Local",
+		cfg.MY_USER, cfg.MY_PASS, cfg.MY_HOST, cfg.MY_PORT, cfg.MY_DB_NAME)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 	db.AutoMigrate(&models.User{})
-	log.Println("Mysql db connected")
-	return db, err
+	log.Println("MySQL connected")
+	return db, nil
 }

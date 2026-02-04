@@ -30,7 +30,7 @@ func (h *UserHandlers) Create(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := h.srvic.Create(body.Name, body.Email) // <-- use :=
+	user, err := h.srvic.Create(body.Name, body.Email)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),

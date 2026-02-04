@@ -34,9 +34,10 @@ func StartServer(lc fx.Lifecycle, cfg *config.Config, app *fiber.App) {
 }
 
 func main() {
+
 	fx.New(
 		fx.Provide(
-			config.Load,
+			config.LoadConfig,
 			Newfiber,
 			repository.NewRepository,
 			service.NewUserService,
